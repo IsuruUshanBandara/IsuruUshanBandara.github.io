@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import emailjs from '@emailjs/browser'
+import { doc, getDoc, setDoc, addDoc, collection, increment, serverTimestamp } from 'firebase/firestore'
+import { db } from '../../lib/firebase'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -31,11 +33,12 @@ const CONTACT_LINKS = [
   },
 ]
 
-const MSG_LIMIT   = 5
-const STORAGE_KEY = 'iu_msg_count'
+const MSG_LIMIT = 5
 
-function getCount()  { return parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10) }
-function bumpCount() { localStorage.setItem(STORAGE_KEY, String(getCount() + 1)) }
+// Sanitise email so it can be used as a Firestore document ID
+function emailToId(email) {
+  return email.trim().toLowerCase().replace(/[^a-z0-9@._-]/g, '_')
+}
 
 function inputStyle(focused) {
   return {
@@ -56,22 +59,26 @@ function inputStyle(focused) {
 export default function Contact() {
   const [form,    setForm]    = useState({ name: '', email: '', message: '' })
   const [focused, setFocused] = useState({})
-  const [status,  setStatus]  = useState(() =>
-    getCount() >= MSG_LIMIT ? 'limit' : 'idle'
-  )
+  const [status,  setStatus]  = useState('idle') // idle | sending | sent | error | limit
 
   const handleChange = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }))
 
   const handleSubmit = async e => {
     e.preventDefault()
-
-    if (getCount() >= MSG_LIMIT) {
-      setStatus('limit')
-      return
-    }
-
     setStatus('sending')
+
     try {
+      // ── 1. Check Firestore count for this email ───────────────────────────
+      const limitRef  = doc(db, 'contactLimits', emailToId(form.email))
+      const limitSnap = await getDoc(limitRef)
+      const count     = limitSnap.exists() ? (limitSnap.data().count ?? 0) : 0
+
+      if (count >= MSG_LIMIT) {
+        setStatus('limit')
+        return
+      }
+
+      // ── 2. Send email via EmailJS ─────────────────────────────────────────
       await emailjs.send(
         import.meta.env.VITE_EMAILJS_SERVICE_ID,
         import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
@@ -82,16 +89,32 @@ export default function Contact() {
         },
         import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
       )
-      bumpCount()
-      if (getCount() >= MSG_LIMIT) {
+
+      // ── 3. Save message to Firestore ──────────────────────────────────────
+      await addDoc(collection(db, 'contactMessages'), {
+        name:      form.name,
+        email:     form.email,
+        message:   form.message,
+        createdAt: serverTimestamp(),
+      })
+
+      // ── 4. Increment count in Firestore ───────────────────────────────────
+      await setDoc(limitRef, {
+        count:         increment(1),
+        lastMessageAt: serverTimestamp(),
+      }, { merge: true })
+
+      // ── 5. Check if limit now reached after this message ──────────────────
+      if (count + 1 >= MSG_LIMIT) {
         setStatus('limit')
       } else {
         setStatus('sent')
         setForm({ name: '', email: '', message: '' })
         setTimeout(() => setStatus('idle'), 5000)
       }
+
     } catch (err) {
-      console.error('EmailJS error:', err)
+      console.error('Contact form error:', err)
       setStatus('error')
       setTimeout(() => setStatus('idle'), 4000)
     }
