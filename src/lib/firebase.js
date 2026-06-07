@@ -2,13 +2,13 @@ import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyD1Szd4I2YkK3TxJUtU8u7uX800LRtAJPM',
-  authDomain: 'isuru-portfolio-92a51.firebaseapp.com',
-  projectId: 'isuru-portfolio-92a51',
-  storageBucket: 'isuru-portfolio-92a51.firebasestorage.app',
-  messagingSenderId: '599208897375',
-  appId: '1:599208897375:web:749313765227bf42ace4ea',
+  apiKey:            import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain:        import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId:         import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket:     import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId:             import.meta.env.VITE_FIREBASE_APP_ID,
 }
 
 const app = initializeApp(firebaseConfig)
-export const db  = getFirestore(app)
+export const db = getFirestore(app)
