@@ -10,6 +10,8 @@ const LINKS = [
   { label: 'Contact',        href: '#contact'        },
 ]
 
+const BRACKET_GLOW = '0 0 8px rgba(245,158,11,0.9), 0 0 20px rgba(245,158,11,0.5), 0 0 40px rgba(245,158,11,0.2)'
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [active,   setActive]   = useState('')
@@ -28,11 +30,10 @@ export default function Navbar() {
       style={{
         position: 'fixed', top: 0, left: 0, right: 0,
         zIndex: 100,
-        padding: '0 40px',
         height: 64,
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         background: scrolled ? 'rgba(4,3,0,0.92)' : 'transparent',
         backdropFilter: scrolled ? 'blur(14px)' : 'none',
         transition: 'background 0.4s, backdrop-filter 0.4s',
@@ -40,51 +41,65 @@ export default function Navbar() {
         willChange: 'transform',
       }}
     >
-      {/* Logo */}
-      <a href="#hero" style={{ textDecoration: 'none' }}>
-        <span style={{ fontWeight: 800, fontSize: 20, color: 'var(--text-primary)' }}>
-          IU<span style={{ color: 'var(--accent)' }}>.</span>
+      {/* Bracketed nav */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
+
+        {/* Left bracket */}
+        <span style={{
+          fontSize: 32,
+          fontWeight: 300,
+          lineHeight: 1,
+          color: 'var(--accent)',
+          textShadow: BRACKET_GLOW,
+          userSelect: 'none',
+          marginRight: 4,
+        }}>
+          [
         </span>
-      </a>
 
-      {/* Nav links */}
-      <ul style={{ display: 'flex', gap: 32, listStyle: 'none', margin: 0, padding: 0 }}>
-        {LINKS.map(link => (
-          <li key={link.href}>
-            <a
-              href={link.href}
-              onClick={() => setActive(link.href)}
-              style={{
-                textDecoration: 'none',
-                fontSize: 14,
-                fontWeight: 500,
-                color: active === link.href ? 'var(--accent)' : 'var(--text-secondary)',
-                transition: 'color 0.2s',
-              }}
-              onMouseEnter={e => e.currentTarget.style.color = 'var(--text-primary)'}
-              onMouseLeave={e => {
-                e.currentTarget.style.color = active === link.href
-                  ? 'var(--accent)'
-                  : 'var(--text-secondary)'
-              }}
-            >
-              {link.label}
-            </a>
-          </li>
-        ))}
-      </ul>
+        {/* Links */}
+        <ul style={{ display: 'flex', gap: 0, listStyle: 'none', margin: 0, padding: 0 }}>
+          {LINKS.map(link => (
+            <li key={link.href}>
+              <a
+                href={link.href}
+                onClick={() => setActive(link.href)}
+                style={{
+                  display: 'block',
+                  textDecoration: 'none',
+                  fontSize: 13,
+                  fontWeight: active === link.href ? 600 : 500,
+                  color: active === link.href ? 'var(--accent)' : 'var(--text-secondary)',
+                  padding: '0 16px',
+                  transition: 'color 0.2s, font-weight 0.2s',
+                }}
+                onMouseEnter={e => e.currentTarget.style.color = 'var(--text-primary)'}
+                onMouseLeave={e => {
+                  e.currentTarget.style.color = active === link.href
+                    ? 'var(--accent)'
+                    : 'var(--text-secondary)'
+                }}
+              >
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
 
-      {/* Glowing bottom border line */}
-      <div style={{
-        position: 'absolute',
-        bottom: 0, left: 0, right: 0,
-        height: '1px',
-        background: `rgba(245,158,11,${scrolled ? '0.55' : '0.28'})`,
-        boxShadow: scrolled
-          ? '0 0 8px rgba(245,158,11,0.6), 0 0 22px rgba(245,158,11,0.3), 0 0 50px rgba(245,158,11,0.12)'
-          : '0 0 6px rgba(245,158,11,0.35), 0 0 16px rgba(245,158,11,0.14)',
-        transition: 'background 0.4s, box-shadow 0.4s',
-      }} />
+        {/* Right bracket */}
+        <span style={{
+          fontSize: 32,
+          fontWeight: 300,
+          lineHeight: 1,
+          color: 'var(--accent)',
+          textShadow: BRACKET_GLOW,
+          userSelect: 'none',
+          marginLeft: 4,
+        }}>
+          ]
+        </span>
+
+      </div>
     </motion.nav>
   )
 }

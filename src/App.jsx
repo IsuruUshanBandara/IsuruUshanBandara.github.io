@@ -1,4 +1,5 @@
 import Navbar from './components/Navbar'
+import ScrollToTop from './components/ScrollToTop'
 import Hero from './components/sections/Hero'
 import About from './components/sections/About'
 import Skills from './components/sections/Skills'
@@ -26,6 +27,7 @@ function App() {
       <Certifications />
       <Contact />
       <Footer />
+      <ScrollToTop />
     </main>
   )
 }

@@ -8,30 +8,56 @@ const fadeUp = {
   }),
 }
 
+// icon: devicon class name, or null for skills with no devicon
 const SKILL_GROUPS = [
   {
     category: 'Frontend',
-    icon: '🖥️',
-    skills: ['Angular', 'React.js', 'React Native', 'JavaScript (ES6+)', 'HTML5', 'CSS3 / SCSS', 'Tailwind CSS', 'Bootstrap'],
+    skills: [
+      { name: 'Angular',           icon: 'devicon-angular-plain colored'        },
+      { name: 'React.js',          icon: 'devicon-react-original colored'        },
+      { name: 'React Native',      icon: 'devicon-react-original colored'        },
+      { name: 'JavaScript (ES6+)', icon: 'devicon-javascript-plain colored'      },
+      { name: 'HTML5',             icon: 'devicon-html5-plain colored'           },
+      { name: 'CSS3 / SCSS',       icon: 'devicon-sass-original colored'         },
+      { name: 'Tailwind CSS',      icon: 'devicon-tailwindcss-plain colored'     },
+      { name: 'Bootstrap',         icon: 'devicon-bootstrap-plain colored'       },
+    ],
   },
   {
     category: 'Backend Integration',
-    icon: '🔗',
-    skills: ['Node.js', 'Express.js', 'ASP.NET (C#)', 'Java / JSP', 'REST APIs', 'Spring Boot (integration)'],
+    skills: [
+      { name: 'Node.js',              icon: 'devicon-nodejs-plain colored'       },
+      { name: 'Express.js',           icon: 'devicon-express-original'           },
+      { name: 'ASP.NET (C#)',         icon: 'devicon-csharp-plain colored'       },
+      { name: 'Java / JSP',           icon: 'devicon-java-plain colored'         },
+      { name: 'REST APIs',            icon: null                                  },
+      { name: 'Spring Boot',          icon: 'devicon-spring-plain colored'       },
+    ],
   },
   {
     category: 'Cloud & Databases',
-    icon: '☁️',
-    skills: ['Firebase (Firestore, Realtime DB, Auth)', 'MS SQL Server', 'MySQL', 'Azure'],
+    skills: [
+      { name: 'Firebase',      icon: 'devicon-firebase-plain colored'            },
+      { name: 'MySQL',         icon: 'devicon-mysql-plain colored'               },
+      { name: 'MS SQL Server', icon: 'devicon-microsoftsqlserver-plain colored'  },
+      { name: 'Azure',         icon: 'devicon-azure-plain colored'               },
+    ],
   },
   {
     category: 'Tools & Practices',
-    icon: '🛠️',
-    skills: ['Git & GitHub', 'Vite', 'Web Accessibility (WCAG)', 'User Testing', 'Framer Motion', 'Figma'],
+    skills: [
+      { name: 'Git & GitHub',           icon: 'devicon-git-plain colored'        },
+      { name: 'Figma',                  icon: 'devicon-figma-plain colored'      },
+      { name: 'Vite',                   icon: 'devicon-vitejs-plain colored'     },
+      { name: 'Framer Motion',          icon: null                               },
+      { name: 'Web Accessibility (WCAG)', icon: null                             },
+      { name: 'User Testing',           icon: null                               },
+      { name: 'Draw.io',               icon: null                               },
+    ],
   },
 ]
 
-function SkillPill({ label, index }) {
+function SkillPill({ skill, index }) {
   return (
     <motion.span
       custom={index}
@@ -49,8 +75,10 @@ function SkillPill({ label, index }) {
         transition: { type: 'spring', stiffness: 420, damping: 16 },
       }}
       style={{
-        display: 'inline-block',
-        padding: '6px 16px',
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 6,
+        padding: '6px 14px',
         border: '1px solid var(--border)',
         borderRadius: 99,
         fontSize: 13,
@@ -60,7 +88,13 @@ function SkillPill({ label, index }) {
         cursor: 'default',
       }}
     >
-      {label}
+      {skill.icon && (
+        <i
+          className={skill.icon}
+          style={{ fontSize: 15, lineHeight: 1, flexShrink: 0 }}
+        />
+      )}
+      {skill.name}
     </motion.span>
   )
 }
@@ -90,15 +124,15 @@ function SkillCard({ group, cardIndex }) {
         transition: { duration: 0.28 },
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
-        <span style={{ fontSize: 24 }}>{group.icon}</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24 }}>
+        <span style={{ width: 3, height: 18, background: 'var(--accent)', borderRadius: 99, display: 'inline-block', boxShadow: '0 0 6px rgba(245,158,11,0.6)' }} />
         <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
           {group.category}
         </h3>
       </div>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
         {group.skills.map((skill, i) => (
-          <SkillPill key={skill} label={skill} index={i} />
+          <SkillPill key={skill.name} skill={skill} index={i} />
         ))}
       </div>
     </motion.div>
