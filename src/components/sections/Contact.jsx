@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import emailjs from '@emailjs/browser'
+import { useIsMobile } from '../../hooks/useIsMobile'
 import { doc, getDoc, setDoc, addDoc, collection, increment, serverTimestamp } from 'firebase/firestore'
 import { db } from '../../lib/firebase'
 
@@ -17,19 +18,19 @@ const CONTACT_LINKS = [
     label: 'Email',
     value: 'isuruushan2003@gmail.com',
     href:  'mailto:isuruushan2003@gmail.com',
-    icon:  '✉️',
+    iconText: '@',
   },
   {
     label: 'GitHub',
     value: 'github.com/IsuruUshanBandara',
     href:  'https://github.com/IsuruUshanBandara',
-    icon:  '🐙',
+    iconText: 'GH',
   },
   {
     label: 'LinkedIn',
     value: 'linkedin.com/in/isuru-ushan-b2761a24a',
     href:  'https://linkedin.com/in/isuru-ushan-b2761a24a',
-    icon:  '💼',
+    iconText: 'in',
   },
 ]
 
@@ -45,7 +46,7 @@ function inputStyle(focused) {
     width: '100%',
     padding: '12px 16px',
     background: 'var(--background)',
-    border: `1px solid ${focused ? 'var(--accent)' : 'var(--border)'}`,
+    border: `1px solid ${focused ? 'var(--accent)' : 'rgba(255,255,255,0.16)'}`,
     borderRadius: 8,
     color: 'var(--text-primary)',
     fontSize: 14,
@@ -57,6 +58,7 @@ function inputStyle(focused) {
 }
 
 export default function Contact() {
+  const isMobile = useIsMobile()
   const [form,    setForm]    = useState({ name: '', email: '', message: '' })
   const [focused, setFocused] = useState({})
   const [status,  setStatus]  = useState('idle') // idle | sending | sent | error | limit
@@ -125,7 +127,7 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      style={{ background: 'var(--surface)', padding: '100px 24px' }}
+      style={{ background: 'var(--surface)', padding: isMobile ? '64px 20px' : '100px 24px' }}
     >
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
 
@@ -151,7 +153,7 @@ export default function Contact() {
           or just a chat — my inbox is open.
         </motion.p>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 64, alignItems: 'start' }}>
 
           {/* Contact links */}
           <motion.div
@@ -168,7 +170,7 @@ export default function Contact() {
                   display: 'flex', alignItems: 'center', gap: 16,
                   padding: '20px 24px',
                   background: 'var(--background)',
-                  border: '1px solid var(--border)',
+                  border: '1px solid rgba(255,255,255,0.14)',
                   borderRadius: 12,
                   textDecoration: 'none',
                   transition: 'border-color 0.2s, transform 0.2s',
@@ -178,16 +180,15 @@ export default function Contact() {
                   e.currentTarget.style.transform   = 'translateX(6px)'
                 }}
                 onMouseLeave={e => {
-                  e.currentTarget.style.borderColor = 'var(--border)'
+                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)'
                   e.currentTarget.style.transform   = 'translateX(0)'
                 }}
               >
-                <span style={{ fontSize: 22 }}>{link.icon}</span>
                 <div>
-                  <div style={{ fontSize: 12, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 2 }}>
+                  <div style={{ fontSize: 11, color: 'rgba(245,158,11,0.75)', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 3, fontWeight: 600 }}>
                     {link.label}
                   </div>
-                  <div style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>
+                  <div style={{ fontSize: 14, fontWeight: 500, color: 'rgba(255,255,255,0.85)' }}>
                     {link.value}
                   </div>
                 </div>

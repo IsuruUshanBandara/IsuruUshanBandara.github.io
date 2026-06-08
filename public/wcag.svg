@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 60" width="80" height="60">
+  <!-- Gold background bar -->
+  <rect width="80" height="60" rx="4" fill="#003366"/>
+  <!-- W3C band top -->
+  <rect width="80" height="22" rx="4" fill="#003366"/>
+  <rect width="80" height="18" y="0" fill="#003366"/>
+  <!-- Gold accent bottom bar -->
+  <rect width="80" height="24" y="36" rx="0" fill="#c8960c"/>
+  <rect width="80" height="4" y="36" fill="#c8960c"/>
+  <!-- W3C text -->
+  <text x="40" y="15" font-family="Arial,sans-serif" font-size="11" font-weight="700"
+        fill="#ffffff" text-anchor="middle" letter-spacing="1">W3C</text>
+  <!-- WCAG text -->
+  <text x="40" y="31" font-family="Arial,sans-serif" font-size="10" font-weight="700"
+        fill="#ffffff" text-anchor="middle" letter-spacing="0.5">WCAG 2.2</text>
+  <!-- AA text -->
+  <text x="40" y="53" font-family="Arial,sans-serif" font-size="13" font-weight="900"
+        fill="#003366" text-anchor="middle" letter-spacing="2">AA</text>
+</svg>

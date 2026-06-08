@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
+import { useIsMobile } from '../../hooks/useIsMobile'
 
 // ── Magnetic Button ──────────────────────────────────────────────────────────
 function MagneticBtn({ href, children, primary = false }) {
@@ -42,15 +43,16 @@ function MagneticBtn({ href, children, primary = false }) {
       }
     : {
         padding: '12px 32px',
-        border: '1px solid rgba(245,158,11,0.25)',
+        border: '1px solid rgba(245,158,11,0.6)',
         color: 'var(--text-primary)',
         borderRadius: 8,
         fontWeight: 600,
         fontSize: 15,
         textDecoration: 'none',
         display: 'inline-block',
-        boxShadow: '0 0 0 1px rgba(245,158,11,0.1), 0 0 14px rgba(245,158,11,0.06)',
-        transition: 'border-color 0.2s, color 0.2s, box-shadow 0.3s, transform 0.35s cubic-bezier(.23,1,.32,1)',
+        background: 'rgba(245,158,11,0.07)',
+        boxShadow: '0 0 0 1px rgba(245,158,11,0.18), 0 0 14px rgba(245,158,11,0.08)',
+        transition: 'border-color 0.2s, color 0.2s, background 0.2s, box-shadow 0.3s, transform 0.35s cubic-bezier(.23,1,.32,1)',
       }
 
   return (
@@ -69,9 +71,10 @@ function MagneticBtn({ href, children, primary = false }) {
             e.currentTarget.style.background = 'var(--accent-hover)'
             e.currentTarget.style.boxShadow = '0 0 24px rgba(245,158,11,0.65), 0 0 55px rgba(245,158,11,0.28)'
           } else {
-            e.currentTarget.style.borderColor = 'rgba(245,158,11,0.6)'
+            e.currentTarget.style.borderColor = 'rgba(245,158,11,0.9)'
             e.currentTarget.style.color = 'var(--accent)'
-            e.currentTarget.style.boxShadow = '0 0 0 1px rgba(245,158,11,0.35), 0 0 20px rgba(245,158,11,0.18)'
+            e.currentTarget.style.background = 'rgba(245,158,11,0.14)'
+            e.currentTarget.style.boxShadow = '0 0 0 1px rgba(245,158,11,0.45), 0 0 20px rgba(245,158,11,0.22)'
           }
         }}
         onMouseLeave={e => {
@@ -79,9 +82,10 @@ function MagneticBtn({ href, children, primary = false }) {
             e.currentTarget.style.background = 'var(--accent)'
             e.currentTarget.style.boxShadow = '0 0 18px rgba(245,158,11,0.45), 0 0 40px rgba(245,158,11,0.18)'
           } else {
-            e.currentTarget.style.borderColor = 'rgba(245,158,11,0.25)'
+            e.currentTarget.style.borderColor = 'rgba(245,158,11,0.6)'
             e.currentTarget.style.color = 'var(--text-primary)'
-            e.currentTarget.style.boxShadow = '0 0 0 1px rgba(245,158,11,0.1), 0 0 14px rgba(245,158,11,0.06)'
+            e.currentTarget.style.background = 'rgba(245,158,11,0.07)'
+            e.currentTarget.style.boxShadow = '0 0 0 1px rgba(245,158,11,0.18), 0 0 14px rgba(245,158,11,0.08)'
           }
         }}
       >
@@ -263,13 +267,14 @@ function useTypingEffect(words, speed = 80, pause = 1800) {
 // ── Hero Component ───────────────────────────────────────────────────────────
 const ROLES = [
   'Frontend Developer',
-  'React & Angular Expert',
+  'React & Angular Developer',
   'UI/UX Enthusiast',
   'Accessibility Advocate',
 ]
 
 export default function Hero() {
-  const role = useTypingEffect(ROLES)
+  const role     = useTypingEffect(ROLES)
+  const isMobile = useIsMobile()
 
   return (
     <section
@@ -289,14 +294,14 @@ export default function Hero() {
       {/* Radial glow behind text */}
       <div style={{
         position: 'absolute',
-        width: 600, height: 600,
+        width: isMobile ? 280 : 600, height: isMobile ? 280 : 600,
         borderRadius: '50%',
         background: 'radial-gradient(circle, rgba(245,158,11,0.08) 0%, transparent 70%)',
         pointerEvents: 'none',
       }} />
 
       {/* Text content */}
-      <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '0 24px' }}>
+      <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: isMobile ? '0 20px' : '0 24px' }}>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}

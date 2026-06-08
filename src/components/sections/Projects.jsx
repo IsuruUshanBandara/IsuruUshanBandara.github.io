@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { useRef, useEffect } from 'react'
+import { useIsMobile } from '../../hooks/useIsMobile'
 
 const PROJECTS = [
   {
@@ -51,6 +52,16 @@ const PROJECTS = [
     live: null,
     github: 'https://github.com/IsuruUshanBandara/BusRouteMate',
     featured: false,
+  },
+  {
+    title: 'LiteraNet',
+    subtitle: 'Smart Library Management System',
+    tags: ['Angular 19', 'Node.js', 'MongoDB', 'Socket.io', 'AWS S3', 'Docker'],
+    description:
+      'Team-built full-stack library platform with role-based access for Patrons, Librarians, and Admins. Features real-time notifications via Socket.io, book catalogue with advanced search, reservation workflows, email alerts via Nodemailer, AWS S3 file storage, and Angular SSR — containerised with Docker.',
+    live: null,
+    github: 'https://github.com/DarrenVictoria/LiteraNet',
+    featured: true,
   },
 ]
 
@@ -237,10 +248,11 @@ function ProjectCard({ project, index }) {
 
 // ── Section ───────────────────────────────────────────────────────────────────
 export default function Projects() {
+  const isMobile = useIsMobile()
   return (
     <section
       id="projects"
-      style={{ background: 'var(--surface)', padding: '100px 24px' }}
+      style={{ background: 'var(--surface)', padding: isMobile ? '64px 20px' : '100px 24px' }}
     >
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
 
@@ -266,7 +278,7 @@ export default function Projects() {
 
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(320px, 1fr))',
           gap: 24,
         }}>
           {PROJECTS.map((project, i) => (

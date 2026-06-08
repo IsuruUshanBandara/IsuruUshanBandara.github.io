@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useIsMobile } from '../../hooks/useIsMobile'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 36, scale: 0.97 },
@@ -303,11 +304,12 @@ function CertCard({ cert, index, onView }) {
 // ── Section ───────────────────────────────────────────────────────────────────
 export default function Certifications() {
   const [lightbox, setLightbox] = useState(null)
+  const isMobile = useIsMobile()
 
   return (
     <section
       id="certifications"
-      style={{ background: 'var(--background)', padding: '100px 24px' }}
+      style={{ background: 'var(--background)', padding: isMobile ? '64px 20px' : '100px 24px' }}
     >
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
 
@@ -335,7 +337,7 @@ export default function Certifications() {
 
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(320px, 1fr))',
           gap: 28,
         }}>
           {CERTS.map((cert, i) => (

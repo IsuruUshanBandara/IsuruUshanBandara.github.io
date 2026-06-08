@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { useIsMobile } from '../../hooks/useIsMobile'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 36, scale: 0.97 },
@@ -169,10 +170,11 @@ function EducationCard({ item, index }) {
 }
 
 export default function Education() {
+  const isMobile = useIsMobile()
   return (
     <section
       id="education"
-      style={{ background: 'var(--surface)', padding: '100px 24px' }}
+      style={{ background: 'var(--surface)', padding: isMobile ? '64px 20px' : '100px 24px' }}
     >
       <div style={{ maxWidth: 800, margin: '0 auto' }}>
 

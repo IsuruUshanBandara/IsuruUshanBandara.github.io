@@ -1,5 +1,6 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef, useEffect, useState } from 'react'
+import { useIsMobile } from '../../hooks/useIsMobile'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 36, scale: 0.97 },
@@ -54,11 +55,17 @@ function StatCard({ end, suffix, label }) {
 export default function About() {
   const photoRef = useRef(null)
   const photoInView = useInView(photoRef, { once: true, margin: '-80px' })
+  const isMobile = useIsMobile()
+
+  const photoSize = isMobile ? 220 : 280
+  const svgSize   = photoSize + 16
+  const cx        = svgSize / 2
+  const r         = cx - 3
 
   return (
     <section
       id="about"
-      style={{ background: 'var(--surface)', padding: '100px 24px' }}
+      style={{ background: 'var(--surface)', padding: isMobile ? '64px 20px' : '100px 24px' }}
     >
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
 
@@ -92,21 +99,21 @@ export default function About() {
             viewport={{ once: true }}
             style={{ display: 'flex', justifyContent: 'center' }}
           >
-            <div ref={photoRef} style={{ position: 'relative', width: 280, height: 280 }}>
+            <div ref={photoRef} style={{ position: 'relative', width: photoSize, height: photoSize }}>
               {/* Animated SVG ring */}
               <svg
                 style={{
                   position: 'absolute',
                   top: -8, left: -8,
-                  width: 296, height: 296,
+                  width: svgSize, height: svgSize,
                   overflow: 'visible',
                   pointerEvents: 'none',
                   filter: 'drop-shadow(0 0 6px rgba(245,158,11,0.55)) drop-shadow(0 0 18px rgba(245,158,11,0.25))',
                 }}
-                viewBox="0 0 296 296"
+                viewBox={`0 0 ${svgSize} ${svgSize}`}
               >
                 <motion.circle
-                  cx="148" cy="148" r="145"
+                  cx={cx} cy={cx} r={r}
                   fill="none"
                   stroke="#f59e0b"
                   strokeWidth="2.5"
@@ -159,7 +166,7 @@ export default function About() {
             <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--text-secondary)', marginBottom: 20 }}>
               I hold a <strong style={{ color: 'var(--text-primary)' }}>BSc (Hons) in Software Engineering</strong> from
               the University of Plymouth (Second Class Upper Division), and I currently freelance for a
-              US-based client — leading Angular frontends that talk to Spring Boot backends, while
+              US-based client, leading Angular frontends that talk to Spring Boot backends, while
               keeping WCAG accessibility front and centre.
             </p>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--text-secondary)', marginBottom: 36 }}>
@@ -181,21 +188,24 @@ export default function About() {
                   rel="noreferrer"
                   style={{
                     padding: '8px 20px',
-                    border: '1px solid var(--border)',
-                    color: 'var(--text-secondary)',
+                    border: '1px solid rgba(245,158,11,0.45)',
+                    color: 'rgba(255,255,255,0.72)',
                     borderRadius: 6,
                     fontSize: 14,
                     fontWeight: 500,
                     textDecoration: 'none',
-                    transition: 'border-color 0.2s, color 0.2s',
+                    background: 'rgba(245,158,11,0.05)',
+                    transition: 'border-color 0.2s, color 0.2s, background 0.2s',
                   }}
                   onMouseEnter={e => {
                     e.currentTarget.style.borderColor = 'var(--accent)'
                     e.currentTarget.style.color = 'var(--accent)'
+                    e.currentTarget.style.background = 'rgba(245,158,11,0.12)'
                   }}
                   onMouseLeave={e => {
-                    e.currentTarget.style.borderColor = 'var(--border)'
-                    e.currentTarget.style.color = 'var(--text-secondary)'
+                    e.currentTarget.style.borderColor = 'rgba(245,158,11,0.45)'
+                    e.currentTarget.style.color = 'rgba(255,255,255,0.72)'
+                    e.currentTarget.style.background = 'rgba(245,158,11,0.05)'
                   }}
                 >
                   {link.label}
@@ -216,7 +226,7 @@ export default function About() {
             gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
             gap: 24,
             marginTop: 80,
-            padding: '40px 32px',
+            padding: isMobile ? '28px 20px' : '40px 32px',
             background: 'var(--background)',
             borderRadius: 16,
             border: '1px solid rgba(245,158,11,0.18)',

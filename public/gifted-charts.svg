@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Background is transparent -->
+  <!-- Bar chart bars (from left to right: blue, orange, green, red) -->
+  <rect x="8" y="55" width="16" height="35" rx="3" fill="#4FC3F7"/>
+  <rect x="28" y="35" width="16" height="55" rx="3" fill="#FF7043"/>
+  <rect x="48" y="45" width="16" height="45" rx="3" fill="#66BB6A"/>
+  <rect x="68" y="20" width="16" height="70" rx="3" fill="#EF5350"/>
+  <!-- Upward trend arrow (teal) -->
+  <path d="M15 50 Q35 30 55 38 Q70 44 85 15" stroke="#26C6DA" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <polygon points="85,15 78,22 90,24" fill="#26C6DA"/>
+</svg>

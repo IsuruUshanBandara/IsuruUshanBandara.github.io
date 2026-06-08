@@ -1,149 +1,128 @@
 import { motion } from 'framer-motion'
+import { useIsMobile } from '../../hooks/useIsMobile'
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 36, scale: 0.97 },
+  hidden: { opacity: 0, y: 28, scale: 0.95 },
   visible: (i) => ({
     opacity: 1, y: 0, scale: 1,
-    transition: { duration: 0.55, delay: i * 0.08, ease: [0.21, 1.11, 0.81, 0.99] },
+    transition: { duration: 0.45, delay: i * 0.04, ease: [0.21, 1.11, 0.81, 0.99] },
   }),
 }
 
-// icon: devicon class name, or null for skills with no devicon
-const SKILL_GROUPS = [
-  {
-    category: 'Frontend',
-    skills: [
-      { name: 'Angular',           icon: 'devicon-angular-plain colored'        },
-      { name: 'React.js',          icon: 'devicon-react-original colored'        },
-      { name: 'React Native',      icon: 'devicon-react-original colored'        },
-      { name: 'JavaScript (ES6+)', icon: 'devicon-javascript-plain colored'      },
-      { name: 'HTML5',             icon: 'devicon-html5-plain colored'           },
-      { name: 'CSS3 / SCSS',       icon: 'devicon-sass-original colored'         },
-      { name: 'Tailwind CSS',      icon: 'devicon-tailwindcss-plain colored'     },
-      { name: 'Bootstrap',         icon: 'devicon-bootstrap-plain colored'       },
-    ],
-  },
-  {
-    category: 'Backend Integration',
-    skills: [
-      { name: 'Node.js',              icon: 'devicon-nodejs-plain colored'       },
-      { name: 'Express.js',           icon: 'devicon-express-original'           },
-      { name: 'ASP.NET (C#)',         icon: 'devicon-csharp-plain colored'       },
-      { name: 'Java / JSP',           icon: 'devicon-java-plain colored'         },
-      { name: 'REST APIs',            icon: null                                  },
-      { name: 'Spring Boot',          icon: 'devicon-spring-plain colored'       },
-    ],
-  },
-  {
-    category: 'Cloud & Databases',
-    skills: [
-      { name: 'Firebase',      icon: 'devicon-firebase-plain colored'            },
-      { name: 'MySQL',         icon: 'devicon-mysql-plain colored'               },
-      { name: 'MS SQL Server', icon: 'devicon-microsoftsqlserver-plain colored'  },
-      { name: 'Azure',         icon: 'devicon-azure-plain colored'               },
-    ],
-  },
-  {
-    category: 'Tools & Practices',
-    skills: [
-      { name: 'Git & GitHub',           icon: 'devicon-git-plain colored'        },
-      { name: 'Figma',                  icon: 'devicon-figma-plain colored'      },
-      { name: 'Vite',                   icon: 'devicon-vitejs-plain colored'     },
-      { name: 'Framer Motion',          icon: null                               },
-      { name: 'Web Accessibility (WCAG)', icon: null                             },
-      { name: 'User Testing',           icon: null                               },
-      { name: 'Draw.io',               icon: null                               },
-    ],
-  },
+// icon: devicon class name | iconUrl: absolute/relative URL | null = no icon
+// Skills with icons first, no-icon skills at the end
+const SKILLS = [
+  // ── Highlighted first ────────────────────────────────────────────────
+  { name: 'WCAG',               iconUrl: 'https://www.wcag.com/wp-content/uploads/2025/09/level_icon_header_logo.svg' },
+  // ── Languages & Frameworks ────────────────────────────────────────────
+  { name: 'Angular',            icon: 'devicon-angular-plain colored'              },
+  { name: 'React.js',           icon: 'devicon-react-original colored'             },
+  { name: 'React Native',       icon: 'devicon-react-original colored'             },
+  { name: 'JavaScript (ES6+)',  icon: 'devicon-javascript-plain colored'           },
+  { name: 'HTML',               icon: 'devicon-html5-plain colored'                },
+  { name: 'CSS3 / SCSS',        icon: 'devicon-sass-original colored'              },
+  { name: 'Tailwind CSS',       icon: 'devicon-tailwindcss-plain colored'          },
+  { name: 'Bootstrap',          icon: 'devicon-bootstrap-plain colored'            },
+  { name: 'Material UI',        icon: 'devicon-materialui-plain colored'           },
+  { name: 'Expo',               icon: 'devicon-expo-original'                      },
+  { name: 'Node.js',            icon: 'devicon-nodejs-plain colored'               },
+  { name: 'Express.js',         icon: 'devicon-express-original'                   },
+  { name: 'ASP.NET (C#)',       icon: 'devicon-dot-net-plain colored'              },
+  { name: 'Spring Boot',        icon: 'devicon-spring-plain colored'               },
+  { name: 'Java / JSP',         icon: 'devicon-java-plain colored'                 },
+  { name: 'C',                  icon: 'devicon-c-plain colored'                    },
+  { name: 'C#',                 icon: 'devicon-csharp-plain colored'               },
+  { name: 'PHP',                icon: 'devicon-php-plain colored'                  },
+  { name: 'Python',             icon: 'devicon-python-plain colored'               },
+  // ── Databases & Cloud ────────────────────────────────────────────────
+  { name: 'Firebase',           icon: 'devicon-firebase-plain colored'             },
+  { name: 'MySQL',              icon: 'devicon-mysql-plain colored'                },
+  { name: 'MS SQL Server',      icon: 'devicon-microsoftsqlserver-plain colored'   },
+  { name: 'MongoDB',            icon: 'devicon-mongodb-plain colored'              },
+  // ── Tools ────────────────────────────────────────────────────────────
+  { name: 'Git & GitHub',       icon: 'devicon-git-plain colored'                  },
+  { name: 'Figma',              icon: 'devicon-figma-plain colored'                },
+  { name: 'Vite',               icon: 'devicon-vitejs-plain colored'               },
+  { name: 'Docker',             icon: 'devicon-docker-plain colored'               },
+  { name: 'Postman',            icon: 'devicon-postman-plain colored'              },
+  { name: 'Google Maps',        iconUrl: 'https://cdn.simpleicons.org/googlemaps'  },
+  { name: 'i18next',            iconUrl: 'https://cdn.simpleicons.org/i18next'     },
+  { name: 'Gifted Charts',      iconUrl: '/gifted-charts.svg'                      },
+  { name: 'React Native Paper', iconUrl: '/react-native-paper.svg'                 },
+  { name: 'Draw.io',            iconUrl: 'https://cdn.simpleicons.org/diagramsdotnet' },
 ]
 
-function SkillPill({ skill, index }) {
+const GLOW_HOVER = '0 0 0 1px rgba(245,158,11,0.70), 0 0 26px rgba(245,158,11,0.40), 0 0 55px rgba(245,158,11,0.16)'
+
+function SkillTile({ skill, index }) {
+  const hasIcon = !!(skill.icon || skill.iconUrl)
+
   return (
-    <motion.span
+    <motion.div
       custom={index}
       variants={fadeUp}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true }}
-      whileHover={{
-        scale: 1.12,
-        y: -5,
-        borderColor: 'rgba(245,158,11,0.7)',
-        color: 'var(--accent)',
-        backgroundColor: 'rgba(245, 158, 11, 0.09)',
-        boxShadow: '0 0 10px rgba(245,158,11,0.3), 0 0 22px rgba(245,158,11,0.12)',
-        transition: { type: 'spring', stiffness: 420, damping: 16 },
-      }}
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 6,
-        padding: '6px 14px',
-        border: '1px solid var(--border)',
-        borderRadius: 99,
-        fontSize: 13,
-        fontWeight: 500,
-        color: 'var(--text-secondary)',
-        background: 'var(--surface-hover)',
-        cursor: 'default',
-      }}
+      viewport={{ once: true, margin: '-40px' }}
     >
-      {skill.icon && (
-        <i
-          className={skill.icon}
-          style={{ fontSize: 15, lineHeight: 1, flexShrink: 0 }}
-        />
-      )}
-      {skill.name}
-    </motion.span>
-  )
-}
+      <motion.div
+        whileHover={{
+          scale: 1.07,
+          y: -4,
+          borderColor: 'rgba(245,158,11,0.70)',
+          boxShadow: GLOW_HOVER,
+          transition: { type: 'spring', stiffness: 380, damping: 18 },
+        }}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: hasIcon ? 12 : 0,
+          padding: '22px 12px',
+          background: 'rgba(255,255,255,0.10)',
+          border: '1px solid rgba(245,158,11,0.18)',
+          borderRadius: 14,
+          cursor: 'default',
+          minHeight: 96,
+          height: '100%',
+        }}
+      >
+        {skill.iconUrl ? (
+          <img
+            src={skill.iconUrl}
+            alt={skill.name}
+            style={{ width: 36, height: 36, objectFit: 'contain', flexShrink: 0 }}
+          />
+        ) : skill.icon ? (
+          <i
+            className={skill.icon}
+            style={{ fontSize: 36, lineHeight: 1, flexShrink: 0 }}
+          />
+        ) : null}
 
-function SkillCard({ group, cardIndex }) {
-  return (
-    <motion.div
-      custom={cardIndex}
-      variants={fadeUp}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true }}
-      style={{
-        background: 'var(--surface)',
-        border: '1px solid rgba(245,158,11,0.18)',
-        borderRadius: 16,
-        padding: '32px 28px',
-        boxShadow: '0 0 0 1px rgba(245,158,11,0.12), 0 0 18px rgba(245,158,11,0.08), 0 0 40px rgba(245,158,11,0.03)',
-        transition: 'border-color 0.4s ease, box-shadow 0.4s ease',
-        transform: 'translateZ(0)',
-        willChange: 'transform',
-      }}
-      whileHover={{
-        scale: 1.01,
-        borderColor: 'rgba(245,158,11,0.55)',
-        boxShadow: '0 0 0 1px rgba(245,158,11,0.55), 0 0 24px rgba(245,158,11,0.28), 0 0 55px rgba(245,158,11,0.10)',
-        transition: { duration: 0.28 },
-      }}
-    >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24 }}>
-        <span style={{ width: 3, height: 18, background: 'var(--accent)', borderRadius: 99, display: 'inline-block', boxShadow: '0 0 6px rgba(245,158,11,0.6)' }} />
-        <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
-          {group.category}
-        </h3>
-      </div>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-        {group.skills.map((skill, i) => (
-          <SkillPill key={skill.name} skill={skill} index={i} />
-        ))}
-      </div>
+        <span style={{
+          fontSize: 12,
+          fontWeight: 600,
+          color: 'var(--text-secondary)',
+          textAlign: 'center',
+          lineHeight: 1.3,
+          letterSpacing: 0.3,
+        }}>
+          {skill.name}
+        </span>
+      </motion.div>
     </motion.div>
   )
 }
 
 export default function Skills() {
+  const isMobile = useIsMobile()
+
   return (
     <section
       id="skills"
-      style={{ background: 'var(--surface)', padding: '100px 24px' }}
+      style={{ background: 'var(--surface)', padding: isMobile ? '64px 20px' : '100px 24px' }}
     >
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
 
@@ -171,11 +150,17 @@ export default function Skills() {
 
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: 24,
+          gridTemplateColumns: isMobile
+            ? 'repeat(3, 1fr)'
+            : 'repeat(auto-fill, minmax(110px, 1fr))',
+          gap: isMobile ? 12 : 16,
         }}>
-          {SKILL_GROUPS.map((group, i) => (
-            <SkillCard key={group.category} group={group} cardIndex={i} />
+          {SKILLS.map((skill, i) => (
+            <SkillTile
+              key={skill.name}
+              skill={skill}
+              index={i}
+            />
           ))}
         </div>
 
